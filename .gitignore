@@ -26,7 +26,24 @@
 *.a
 *.lib
 
+# FastBuild database files
+*.fdb
+
 # Executables
-*.exe
+# *.exe # disabling for fbuild
 *.out
 *.app
+
+# Build folders
+./lib
+./obj
+
+# VS Solutions, projects
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# VS data
+.vs
+x64
+asio/x64

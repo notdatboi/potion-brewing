@@ -1,0 +1,15 @@
+#include "config.bff"
+
+#include "asio/ASIO.bff"
+
+#include "gen_solution.bff"
+
+Alias('GenSolution')
+{
+	.Targets = {'solution'}
+}
+
+Alias('UpdateSolution')
+{
+	.Targets = {'GenSolution'}
+}

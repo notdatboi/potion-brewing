@@ -1,0 +1,133 @@
+#once
+
+.VS2017BasePath = 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community'
+.VS2017Version = '14.16.27023'
+
+.VS2017ToolBinPath = '$VS2017BasePath$\VC\Tools\MSVC\$VS2017Version$\bin\Host' ; without platform folder and part of host folder name (example: ...\bin\Hostx64\x64)
+
+.WindowsSDKBasePath = 'C:\Program Files (x86)\Windows Kits\10'
+.WindowsSDKVersion = '10.0.17763.0'
+
+.WindowsLibPath = '$WindowsSDKBasePath$\Lib\$WindowsSDKVersion$\um' ; without platform folder
+.WindowsIncludePath = '$WindowsSDKBasePath$\Include\$WindowsSDKVersion$\um'
+.WindowsSharedIncludePath = '$WindowsSDKBasePath$\Include\$WindowsSDKVersion$\shared'
+.WindowsUcrtLibPath = '$WindowsSDKBasePath$\Lib\$WindowsSDKVersion$\ucrt' ; without platform folder
+.WindowsUcrtIncludePath = '$WindowsSDKBasePath$\Include\$WindowsSDKVersion$\ucrt'
+
+.DefaultPlatform = 'x64' ; platforms are not used for build, choose appropriate configuration instead
+
+.PlatformToolset = 'v141'
+
+.Platforms = {'x86', 'x64'}
+.Configs = {'Debug', 'Release'}
+
+ForEach(.Platform in .Platforms)
+{
+	Compiler('Compiler-MSVC-$Platform$')
+	{
+		.Root = '$VS2017ToolBinPath$$Platform$\$Platform$'
+		.Executable = '$Root$\cl.exe'
+		.ExtraFiles = 
+		{
+			'$Root$\c1.dll'
+			'$Root$\c1xx.dll',
+			'$Root$\c2.dll',
+			;'$Root$\atlprov.dll', ; Only needed if using ATL
+			'$Root$\msobj140.dll'
+			'$Root$\mspdb140.dll'
+			'$Root$\mspdbcore.dll'
+			'$Root$\mspdbsrv.exe'
+			'$Root$\mspft140.dll'
+			'$Root$\msvcp140.dll'
+			'$Root$\vcruntime140.dll'
+			'$Root$\1033\clui.dll'
+		}
+	}
+}
+
+.MSVCBuilderConfig_x64 =
+[
+	.Platform = 'x64'
+
+	.Compiler = 'Compiler-MSVC-$Platform$'
+	.CompilerOptions = '"%1"' ; input
+		+ ' /Fo"%2"' ; output
+		+ ' /Z7' ; debug format (in .obj)
+		+ ' /c' ; compile only
+		+ ' /nologo' ; no compiler spam
+		+ ' /W4' ; warning level 4
+		+ ' /TP' ; all files are c++
+		;+ ' /WX' ; warnings as errors
+
+	.LibPaths = ' /LIBPATH:"$VS2017BasePath$\VC\Tools\MSVC\$VS2017Version$\lib\$Platform$"'
+		+ ' /LIBPATH:"$WindowsLibPath$\$Platform$"'
+		+ ' /LIBPATH:"$WindowsUcrtLibPath$\$Platform$"'
+
+	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'
+	.LinkerOptions = ' /OUT:"%2"' ; output
+		+ ' "%1"' ; input
+		;+ ' /WX' ; warnings as errors
+		+ ' /NOLOGO' ; no linker spam
+		+ ' /DEBUG' ; keep debug info when linking
+		+ .LibPaths
+	
+	.Librarian = '$VS2017ToolBinPath$$Platform$\$Platform$\lib.exe'
+	.LibrarianOptions = '/NOLOGO /OUT:"%2" "%1"' ; add /WX later
+]
+
+.MSVCBuilderConfig_x86 =
+[
+	.Platform = 'x86'
+
+	.Compiler = 'Compiler-MSVC-$Platform$'
+	.CompilerOptions = '"%1"' ; input
+		+ ' /Fo"%2"' ; output
+		+ ' /Z7' ; debug format (in .obj)
+		+ ' /c' ; compile only
+		+ ' /nologo' ; no compiler spam
+		+ ' /W4' ; warning level 4
+		+ ' /TP' ; all files are c++
+		;+ ' /WX' ; warnings as errors
+
+	.LibPaths = ' /LIBPATH:"$VS2017BasePath$\VC\Tools\MSVC\$VS2017Version$\lib\$Platform$"'
+		+ ' /LIBPATH:"$WindowsLibPath$\$Platform$"'
+		+ ' /LIBPATH:"$WindowsUcrtLibPath$\$Platform$"'
+
+	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'
+	.LinkerOptions = ' /OUT:"%2"' ; output
+		+ ' "%1"' ; input
+		;+ ' /WX' ; warnings as errors
+		+ ' /NOLOGO' ; no linker spam
+		+ ' /DEBUG' ; keep debug info when linking
+		+ .LibPaths
+	
+	.Librarian = '$VS2017ToolBinPath$$Platform$\$Platform$\lib.exe'
+	.LibrarianOptions = '/NOLOGO /OUT:"%2" "%1"' ; add /WX later
+]
+
+
+.PlatformConfigPairs = {}
+ForEach(.Plt in .Platforms)
+{
+	.PlatformConfigPairDebug = 
+	[
+		.Platform = .DefaultPlatform
+		.Config = 'MSVC-Debug-$Plt$'
+		.BuilderConfig = ."MSVCBuilderConfig_$Plt$"
+		.AdditionalCompilerFlags = ' /MTd /Od /RTC1 /GS /Oy- /GR- /EHscr /DDEBUG'
+		.AdditionalLinkerFlags = ''
+		.AdditionalLibrarianFlags = ''
+	]
+	^PlatformConfigPairs + .PlatformConfigPairDebug
+	
+	.PlatformConfigPairRelease = 
+	[
+		.Platform = .DefaultPlatform
+		.Config = 'MSVC-Release-$Plt$'
+		.BuilderConfig = ."MSVCBuilderConfig_$Plt$"
+		.AdditionalCompilerFlags = ' /MT /Ox /Oy /Oi /GS- /GF /GL /Gy /Gw /GR- /EHsc /DRELEASE'
+		.AdditionalLinkerFlags = ' /LTCG /OPT:REF,ICF'
+		.AdditionalLibrarianFlags = ' /LTCG'
+	]
+	^PlatformConfigPairs + .PlatformConfigPairRelease
+}

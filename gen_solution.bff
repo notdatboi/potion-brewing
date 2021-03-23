@@ -1,0 +1,24 @@
+; Projects
+
+#include "asio/ASIO.bff"
+
+; Solution folders
+
+.ExternalProjectsFolder = 
+[
+	.Path = 'External'
+	.Projects = {'ASIO-proj'}
+]
+
+; Solution
+
+VSSolution("solution")
+{
+	.SolutionOutput = 'solution.sln'
+	.SolutionProjects = {'ASIO-proj'}
+	.SolutionFolders = {.ExternalProjectsFolder}
+	.SolutionBuildProject = 'ASIO-proj'
+	.SolutionVisualStudioVersion = '17.0.26228'
+	.SolutionConfigs = .PlatformConfigPairs
+}
+
