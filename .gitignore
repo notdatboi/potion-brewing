@@ -26,8 +26,9 @@
 *.a
 *.lib
 
-# FastBuild database files
+# FastBuild files
 *.fdb
+*.log
 
 # Executables
 # *.exe # disabling for fbuild
