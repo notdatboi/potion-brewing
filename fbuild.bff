@@ -2,6 +2,7 @@
 
 #include "asio/ASIO.bff"
 
+#if __WINDOWS__ ; Visual Studio-specific
 #include "gen_solution.bff"
 
 Alias('GenSolution')
@@ -13,3 +14,4 @@ Alias('UpdateSolution')
 {
 	.Targets = {'GenSolution'}
 }
+#endif

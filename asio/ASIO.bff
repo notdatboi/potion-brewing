@@ -6,9 +6,24 @@
 .ProjectPath = 'asio'
 .ObjPath = 'obj'
 .OutputPath = 'lib'
-.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include', .WindowsIncludePath, .WindowsUcrtIncludePath, .WindowsSharedIncludePath}
+
+.StaticLibExtension =
+#if __WINDOWS__
+	'lib'
+#else
+	'a'
+#endif
+
+.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include'}
+#if __WINDOWS__
+.AdditionalIncludes + .WindowsIncludePath
+	+ .WindowsUcrtIncludePath
+	+ .WindowsSharedIncludePath
+#else
+#endif
 .AdditionalDefines = {'ASIO_SEPARATE_COMPILATION'}
 
+#if __WINDOWS__
 VCXProject('$ProjectName$-proj')
 {
 	.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
@@ -19,17 +34,28 @@ VCXProject('$ProjectName$-proj')
 	.ProjectRebuildCommand = 'cd ^$(SolutionDir) &amp; fbuild -ide -clean -dist -cache ^$(ProjectName)-^$(Configuration)'
 	.ProjectConfigs = .PlatformConfigPairs
 }
+#endif
 
-.AdditionalIncludeStringMSVC = ''
+.AdditionalIncludeString = ''
 ForEach(.Folder in .AdditionalIncludes)
 {
-	^AdditionalIncludeStringMSVC + ' /I"$Folder$"'
+	^AdditionalIncludeString
+#if __WINDOWS__
+		+ ' /I"$Folder$"'
+#else
+		+ ' -I "$Folder$"'
+#endif
 }
 
-.AdditionalDefineStringMSVC = ''
+.AdditionalDefineString = ''
 ForEach(.Define in .AdditionalDefines)
 {
-	^AdditionalDefineStringMSVC + ' /D"$Define$"'
+	^AdditionalDefineString
+#if __WINDOWS__
+		+ ' /D"$Define$"'
+#else
+		+ ' -D $Define$'
+#endif
 }
 
 ForEach(.Config in .PlatformConfigPairs)
@@ -39,13 +65,13 @@ ForEach(.Config in .PlatformConfigPairs)
 	Library('$ProjectName$-$Config$')
 	{
 		;.Compiler ; inherited
-		.CompilerOptions + .AdditionalIncludeStringMSVC ; inherited
-			+ .AdditionalDefineStringMSVC
+		.CompilerOptions + .AdditionalIncludeString ; inherited
+			+ .AdditionalDefineString
 			+ .AdditionalCompilerFlags
 		.CompilerOutputPath = '$ObjPath$/$Config$/$ProjectName$'
 		.CompilerInputPath = .ProjectPath
 		;.Librarian ; inherited
 		.LibrarianOptions + .AdditionalLibrarianFlags ; inherited
-		.LibrarianOutput = '$OutputPath$/$Config$/$ProjectName$.lib'
+		.LibrarianOutput = '$OutputPath$/$Config$/$ProjectName$.$StaticLibExtension$'
 	}
 }
