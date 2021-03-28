@@ -2,7 +2,7 @@
 
 ; Default paths and settings
 .CppStandard = '17'
-#if __WINDOWS
+#if __WINDOWS__
 .VS2017BasePath = 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community'
 .VS2017Version = '14.16.27023'
 
@@ -61,11 +61,8 @@ Compiler('Compiler-GCC')
 #endif
 
 #if __WINDOWS__
-.MSVCBuilderConfig_x64 =
+.MSVCBuilderCommonConfig = 
 [
-	.Platform = 'x64'
-
-	.Compiler = 'Compiler-MSVC-$Platform$'
 	.CompilerOptions = '"%1"' ; input
 		+ ' /Fo"%2"' ; output
 		+ ' /Z7' ; debug format (in .obj)
@@ -73,52 +70,48 @@ Compiler('Compiler-GCC')
 		+ ' /nologo' ; no compiler spam
 		+ ' /W4' ; warning level 4
 		+ ' /TP' ; all files are c++
+		+ ' /std:c++$CppStandard$' ; c++ standard
 		;+ ' /WX' ; warnings as errors
-
-	.LibPaths = ' /LIBPATH:"$VS2017BasePath$\VC\Tools\MSVC\$VS2017Version$\lib\$Platform$"'
-		+ ' /LIBPATH:"$WindowsLibPath$\$Platform$"'
-		+ ' /LIBPATH:"$WindowsUcrtLibPath$\$Platform$"'
-
-	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'
+	
 	.LinkerOptions = ' /OUT:"%2"' ; output
 		+ ' "%1"' ; input
 		;+ ' /WX' ; warnings as errors
 		+ ' /NOLOGO' ; no linker spam
 		+ ' /DEBUG' ; keep debug info when linking
-		+ .LibPaths
-	
-	.Librarian = '$VS2017ToolBinPath$$Platform$\$Platform$\lib.exe'
+		
 	.LibrarianOptions = '/NOLOGO /OUT:"%2" "%1"' ; add /WX later
+]
+
+.MSVCBuilderConfig_x64 =
+[
+	.Platform = 'x64'
+	
+	Using(.MSVCBuilderCommonConfig)
+
+	.LibPaths = ' /LIBPATH:"$VS2017BasePath$\VC\Tools\MSVC\$VS2017Version$\lib\$Platform$"'
+		+ ' /LIBPATH:"$WindowsLibPath$\$Platform$"'
+		+ ' /LIBPATH:"$WindowsUcrtLibPath$\$Platform$"'
+	.LinkerOptions + .LibPaths
+
+	.Compiler = 'Compiler-MSVC-$Platform$'
+	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'	
+	.Librarian = '$VS2017ToolBinPath$$Platform$\$Platform$\lib.exe'
 ]
 
 .MSVCBuilderConfig_x86 =
 [
 	.Platform = 'x86'
-
-	.Compiler = 'Compiler-MSVC-$Platform$'
-	.CompilerOptions = '"%1"' ; input
-		+ ' /Fo"%2"' ; output
-		+ ' /Z7' ; debug format (in .obj)
-		+ ' /c' ; compile only
-		+ ' /nologo' ; no compiler spam
-		+ ' /W4' ; warning level 4
-		+ ' /TP' ; all files are c++
-		;+ ' /WX' ; warnings as errors
+	
+	Using(.MSVCBuilderCommonConfig)
 
 	.LibPaths = ' /LIBPATH:"$VS2017BasePath$\VC\Tools\MSVC\$VS2017Version$\lib\$Platform$"'
 		+ ' /LIBPATH:"$WindowsLibPath$\$Platform$"'
 		+ ' /LIBPATH:"$WindowsUcrtLibPath$\$Platform$"'
+	.LinkerOptions + .LibPaths
 
-	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'
-	.LinkerOptions = ' /OUT:"%2"' ; output
-		+ ' "%1"' ; input
-		;+ ' /WX' ; warnings as errors
-		+ ' /NOLOGO' ; no linker spam
-		+ ' /DEBUG' ; keep debug info when linking
-		+ .LibPaths
-	
+	.Compiler = 'Compiler-MSVC-$Platform$'
+	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'	
 	.Librarian = '$VS2017ToolBinPath$$Platform$\$Platform$\lib.exe'
-	.LibrarianOptions = '/NOLOGO /OUT:"%2" "%1"' ; add /WX later
 ]
 #else
 .GCCBuilderCommonConfig =
@@ -164,7 +157,7 @@ ForEach(.Plt in .Platforms)
 		.Platform = .DefaultPlatform
 		.Config = 'MSVC-Debug-$Plt$'
 		.BuilderConfig = ."MSVCBuilderConfig_$Plt$"
-		.AdditionalCompilerFlags = ' /MTd /Od /RTC1 /GS /Oy- /GR- /EHscr /DDEBUG'
+		.AdditionalCompilerFlags = ' /MTd /Od /RTC1 /GS /Oy- /EHscr /DDEBUG'
 		.AdditionalLinkerFlags = ''
 		.AdditionalLibrarianFlags = ''
 	]
@@ -175,7 +168,7 @@ ForEach(.Plt in .Platforms)
 		.Platform = .DefaultPlatform
 		.Config = 'MSVC-Release-$Plt$'
 		.BuilderConfig = ."MSVCBuilderConfig_$Plt$"
-		.AdditionalCompilerFlags = ' /MT /Ox /Oy /Oi /GS- /GF /GL /Gy /Gw /GR- /EHsc /DRELEASE'
+		.AdditionalCompilerFlags = ' /MT /Ox /Oy /Oi /GS- /GF /GL /Gy /Gw /EHsc /DRELEASE'
 		.AdditionalLinkerFlags = ' /LTCG /OPT:REF,ICF'
 		.AdditionalLibrarianFlags = ' /LTCG'
 	]
