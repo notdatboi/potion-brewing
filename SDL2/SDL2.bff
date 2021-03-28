@@ -1,0 +1,7 @@
+#if __WINDOWS__
+.SDL2LibPath = 'SDL2-2.0.14\lib' ; has x86 and x64 folders inside
+.SDL2IncludePath = 'SDL2-2.0.14\include'
+.SDL2TTFLibPath = 'SDL2_ttf-2.0.15\lib' ; has x86 and x64 folders inside
+.SDL2TTFIncludePath = 'SDL2_ttf-2.0.15\include'
+#else
+#endif
