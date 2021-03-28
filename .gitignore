@@ -47,3 +47,6 @@
 .vs
 x64
 asio/x64
+
+# CLion data
+.idea

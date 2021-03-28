@@ -1,5 +1,8 @@
 #once
 
+; Default paths and settings
+.CppStandard = '17'
+#if __WINDOWS
 .VS2017BasePath = 'C:\Program Files (x86)\Microsoft Visual Studio\2017\Community'
 .VS2017Version = '14.16.27023'
 
@@ -17,10 +20,15 @@
 .DefaultPlatform = 'x64' ; platforms are not used for build, choose appropriate configuration instead
 
 .PlatformToolset = 'v141'
+#else
+.GCCBinariesPath = '/usr/bin'
+#endif
+
 
 .Platforms = {'x86', 'x64'}
 .Configs = {'Debug', 'Release'}
 
+#if __WINDOWS__
 ForEach(.Platform in .Platforms)
 {
 	Compiler('Compiler-MSVC-$Platform$')
@@ -44,7 +52,15 @@ ForEach(.Platform in .Platforms)
 		}
 	}
 }
+#else
+Compiler('Compiler-GCC')
+{
+	.Root = '$GCCBinariesPath$'
+	.Executable = '$Root$/g++'
+}
+#endif
 
+#if __WINDOWS__
 .MSVCBuilderConfig_x64 =
 [
 	.Platform = 'x64'
@@ -104,11 +120,45 @@ ForEach(.Platform in .Platforms)
 	.Librarian = '$VS2017ToolBinPath$$Platform$\$Platform$\lib.exe'
 	.LibrarianOptions = '/NOLOGO /OUT:"%2" "%1"' ; add /WX later
 ]
+#else
+.GCCBuilderCommonConfig =
+[
+	.Compiler = 'Compiler-GCC'
+	.CompilerOptions = ' -std=c++$CppStandard$'
+		+ ' -o "%2" "%1"' ; output + input
+		+ ' -c' ; don't run linker
+		+ ' -D__LINUX__ -D__linux__' ; linux defines
+		+ ' -Wall -Wextra' ; errors
+		;+ ' -Werror' ; add later
+
+	.LibPaths = ''
+
+	.Linker = '$GCCBinariesPath$/g++'
+	.LinkerOptions = ' "%1" -o "%2"' ; input + output
+
+	.Librarian = '$GCCBinariesPath$/ar'
+	.LibrarianOptions = ' rcs "%2" "%1"'
+]
+
+.GCCBuilderConfig_x64 =
+[
+	.Platform = 'x64'
+	Using(.GCCBuilderCommonConfig)
+	.CompilerOptions + ' -m64'
+]
+.GCCBuilderConfig_x86 =
+[
+	.Platform = 'x86'
+	Using(.GCCBuilderCommonConfig)
+	.CompilerOptions + ' -m32'
+]
+#endif
 
 
 .PlatformConfigPairs = {}
 ForEach(.Plt in .Platforms)
 {
+#if __WINDOWS__ ; generate configs for MSVC
 	.PlatformConfigPairDebug = 
 	[
 		.Platform = .DefaultPlatform
@@ -130,4 +180,27 @@ ForEach(.Plt in .Platforms)
 		.AdditionalLibrarianFlags = ' /LTCG'
 	]
 	^PlatformConfigPairs + .PlatformConfigPairRelease
+#else ; generate configs for GCC
+	.PlatformConfigPairDebug =
+	[
+		.Platform = .Plt
+		.Config = 'GCC-Debug-$Plt$'
+		.BuilderConfig = ."GCCBuilderConfig_$Plt$"
+		.AdditionalCompilerFlags = ' -g -O0 -D DEBUG'
+		.AdditionalLinkerFlags = ''
+		.AdditionalLibrarianFlags = ''
+	]
+	^PlatformConfigPairs + .PlatformConfigPairDebug
+
+	.PlatformConfigPairRelease =
+	[
+		.Platform = .Plt
+		.Config = 'GCC-Release-$Plt$'
+		.BuilderConfig = ."GCCBuilderConfig_$Plt$"
+		.AdditionalCompilerFlags = ' -O3 -D RELEASE'
+		.AdditionalLinkerFlags = ''
+		.AdditionalLibrarianFlags = ''
+	]
+	^PlatformConfigPairs + .PlatformConfigPairRelease
+#endif
 }
