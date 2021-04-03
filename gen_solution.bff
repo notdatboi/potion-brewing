@@ -1,6 +1,7 @@
 ; Projects
 
 #include "asio/ASIO.bff"
+#include "Graphics-SDL2/Graphics-SDL2.bff"
 
 ; Solution folders
 
@@ -15,9 +16,9 @@
 VSSolution("solution")
 {
 	.SolutionOutput = 'solution.sln'
-	.SolutionProjects = {'ASIO-proj'}
+	.SolutionProjects = {'ASIO-proj', 'Graphics-SDL2-proj'}
 	.SolutionFolders = {.ExternalProjectsFolder}
-	.SolutionBuildProject = 'ASIO-proj'
+	.SolutionBuildProject = 'Graphics-SDL2-proj'
 	.SolutionVisualStudioVersion = '17.0.26228'
 	.SolutionConfigs = .PlatformConfigPairs
 }

@@ -1,28 +1,41 @@
 #once
 
 #include "../config.bff"
+#include "SDL2/SDL2.bff"
 
 {
-	.ProjectName = 'ASIO'
-	.ProjectPath = 'asio'
+	.ProjectName = 'Graphics-SDL2'
+	.ProjectPath = 'Graphics-SDL2'
 	.ObjPath = 'obj'
 	.OutputPath = 'lib'
 
-	.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include'}
+	.RootPath = '..'
+	.CommonGraphicsIncludePath = '$RootPath$/Graphics'
+
+	.SDL2Includes = {}
+	#if __WINDOWS__
+	.SDL2Root = 'SDL2'
+	.SDL2Includes + '$SDL2Root$/$SDL2IncludePath$'
+		+ '$SDL2Root$/$SDL2TTFIncludePath$'
+	#endif
+
+	.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include', .CommonGraphicsIncludePath}
+	.AdditionalIncludes + .SDL2Includes
 	#if __WINDOWS__
 	.AdditionalIncludes + .WindowsIncludePath
 		+ .WindowsUcrtIncludePath
 		+ .WindowsSharedIncludePath
 	#else
 	#endif
-	.AdditionalDefines = {'ASIO_SEPARATE_COMPILATION'}
+	.AdditionalDefines = {}
 
 	#if __WINDOWS__
 	VCXProject('$ProjectName$-proj')
 	{
 		.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
 		.ProjectBasePath = '$ProjectPath$'
-		.ProjectInputPaths = {'$ProjectPath$'}
+		.ProjectInputPaths = {'$ProjectPath$', .CommonGraphicsIncludePath}
+		.ProjectInputPathsExclude = {'$ProjectPath$/$SDL2Root$/Win'}
 		.ProjectConfigs = .PlatformConfigPairs
 	}
 	#endif
