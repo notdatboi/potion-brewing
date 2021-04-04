@@ -1,0 +1,69 @@
+#once
+
+#include "../config.bff"
+
+{
+	.ProjectName = 'Common'
+	.ProjectPath = 'Common'
+	.ObjPath = 'obj'
+	.OutputPath = 'lib'
+
+	.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include'}
+	#if __WINDOWS__
+	.AdditionalIncludes + .WindowsIncludePath
+		+ .WindowsUcrtIncludePath
+		+ .WindowsSharedIncludePath
+	#else
+	#endif
+	.AdditionalDefines = {}
+
+	#if __WINDOWS__
+	VCXProject('$ProjectName$-proj')
+	{
+		.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
+		.ProjectBasePath = '$ProjectPath$'
+		.ProjectInputPaths = {'$ProjectPath$'}
+		.ProjectConfigs = .PlatformConfigPairs
+	}
+	#endif
+
+	.AdditionalIncludeString = ''
+	ForEach(.Folder in .AdditionalIncludes)
+	{
+		^AdditionalIncludeString
+	#if __WINDOWS__
+			+ ' /I"$Folder$"'
+	#else
+			+ ' -I "$Folder$"'
+	#endif
+	}
+
+	.AdditionalDefineString = ''
+	ForEach(.Define in .AdditionalDefines)
+	{
+		^AdditionalDefineString
+	#if __WINDOWS__
+			+ ' /D"$Define$"'
+	#else
+			+ ' -D $Define$'
+	#endif
+	}
+
+	ForEach(.Config in .PlatformConfigPairs)
+	{
+		Using(.Config)
+		Using(.BuilderConfig)
+		Library('$ProjectName$-$Config$')
+		{
+			;.Compiler ; inherited
+			.CompilerOptions + .AdditionalIncludeString ; inherited
+				+ .AdditionalDefineString
+				+ .AdditionalCompilerFlags
+			.CompilerOutputPath = '$ObjPath$/$Config$/$ProjectName$'
+			.CompilerInputPath = .ProjectPath
+			;.Librarian ; inherited
+			.LibrarianOptions + .AdditionalLibrarianFlags ; inherited
+			.LibrarianOutput = '$OutputPath$/$Config$/$ProjectName$.$StaticLibExtension$'
+		}
+	}
+}

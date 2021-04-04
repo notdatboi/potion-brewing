@@ -42,7 +42,7 @@
 # VS Solutions, projects
 *.sln
 *.vcxproj
-*.vcxproj.filters
+*.vcxproj.*
 
 # VS data
 .vs/
@@ -50,6 +50,7 @@
 /asio/x64/
 /Graphics-SDL2/x64/
 /PotionBrewing/x64/
+/Common/x64/
 
 # CLion data
 .idea
