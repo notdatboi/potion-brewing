@@ -12,9 +12,9 @@
 *.pch
 
 # Compiled Dynamic libraries
-*.so
+*.so # linux static libs are not expected in this repo folder
 *.dylib
-*.dll
+#*.dll # we need to add external libs like SDL
 
 # Fortran module files
 *.mod
@@ -23,8 +23,8 @@
 # Compiled Static libraries
 *.lai
 *.la
-*.a
-*.lib
+*.a # linux static libs are not expected in this repo folder
+#*.lib # we need to add external libs like SDL
 
 # FastBuild files
 *.fdb
@@ -36,8 +36,8 @@
 *.app
 
 # Build folders
-./lib
-./obj
+/lib/
+/obj/
 
 # VS Solutions, projects
 *.sln
@@ -45,9 +45,11 @@
 *.vcxproj.filters
 
 # VS data
-.vs
-x64
-asio/x64
+.vs/
+#./x64
+/asio/x64/
+/Graphics-SDL2/x64/
+/PotionBrewing/x64/
 
 # CLion data
 .idea

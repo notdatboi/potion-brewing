@@ -9,12 +9,11 @@
 	.ObjPath = 'obj'
 	.OutputPath = 'lib'
 
-	.RootPath = '..'
-	.CommonGraphicsIncludePath = '$RootPath$/Graphics'
+	.CommonGraphicsIncludePath = 'Graphics'
 
 	.SDL2Includes = {}
 	#if __WINDOWS__
-	.SDL2Root = 'SDL2'
+	.SDL2Root = '$ProjectPath$/SDL2'
 	.SDL2Includes + '$SDL2Root$/$SDL2IncludePath$'
 		+ '$SDL2Root$/$SDL2TTFIncludePath$'
 	#endif
@@ -35,7 +34,7 @@
 		.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
 		.ProjectBasePath = '$ProjectPath$'
 		.ProjectInputPaths = {'$ProjectPath$', .CommonGraphicsIncludePath}
-		.ProjectInputPathsExclude = {'$ProjectPath$/$SDL2Root$/Win'}
+		.ProjectInputPathsExclude = {'$SDL2Root$/Win'}
 		.ProjectConfigs = .PlatformConfigPairs
 	}
 	#endif
