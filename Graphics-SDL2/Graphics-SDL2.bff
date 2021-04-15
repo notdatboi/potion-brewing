@@ -18,7 +18,7 @@
 		+ '$SDL2Root$/$SDL2TTFIncludePath$'
 	#endif
 
-	.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include', .CommonGraphicsIncludePath}
+	.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include', .CommonGraphicsIncludePath, 'Common/include'}
 	.AdditionalIncludes + .SDL2Includes
 	#if __WINDOWS__
 	.AdditionalIncludes + .WindowsIncludePath
@@ -27,17 +27,6 @@
 	#else
 	#endif
 	.AdditionalDefines = {}
-
-	#if __WINDOWS__
-	VCXProject('$ProjectName$-proj')
-	{
-		.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
-		.ProjectBasePath = '$ProjectPath$'
-		.ProjectInputPaths = {'$ProjectPath$', .CommonGraphicsIncludePath}
-		.ProjectInputPathsExclude = {'$SDL2Root$/Win'}
-		.ProjectConfigs = .PlatformConfigPairs
-	}
-	#endif
 
 	.AdditionalIncludeString = ''
 	ForEach(.Folder in .AdditionalIncludes)
@@ -65,7 +54,7 @@
 	{
 		Using(.Config)
 		Using(.BuilderConfig)
-		Library('$ProjectName$-$Config$')
+		Library('$ProjectName$-$Config$-Lib')
 		{
 			;.Compiler ; inherited
 			.CompilerOptions + .AdditionalIncludeString ; inherited
@@ -77,5 +66,31 @@
 			.LibrarianOptions + .AdditionalLibrarianFlags ; inherited
 			.LibrarianOutput = '$OutputPath$/$Config$/$ProjectName$.$StaticLibExtension$'
 		}
+		Alias('$ProjectName$-$Config$')
+		{
+			.Targets = {'$ProjectName$-$Config$-Lib'}
+		}
 	}
+	
+	#if __WINDOWS__
+	.PlatformConfigPairsWithTargets = {}
+	ForEach(.PlatformConfigPair in .PlatformConfigPairs)
+	{
+		.PairWithTarget =
+		[
+			Using(.PlatformConfigPair)
+			.Target = '$ProjectName$-$Config$-Lib'
+		]
+		^PlatformConfigPairsWithTargets + .PairWithTarget
+	}
+
+	VCXProject('$ProjectName$-proj')
+	{
+		.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
+		.ProjectBasePath = '$ProjectPath$'
+		.ProjectInputPaths = {'$ProjectPath$', .CommonGraphicsIncludePath}
+		.ProjectInputPathsExclude = {'$SDL2Root$/Win'}
+		.ProjectConfigs = .PlatformConfigPairsWithTargets
+	}
+	#endif
 }
