@@ -2,8 +2,8 @@
 
 #include "asio/ASIO.bff"
 #include "Graphics-SDL2/Graphics-SDL2.bff"
-#include "PotionBrewing/PotionBrewing.bff"
 #include "Common/Common.bff"
+#include "PotionBrewing/PotionBrewing.bff" ; needed to be last
 
 ; Solution folders
 
@@ -20,7 +20,7 @@ VSSolution("solution")
 	.SolutionOutput = 'solution.sln'
 	.SolutionProjects = {'ASIO-proj', 'Graphics-SDL2-proj', 'PotionBrewing-proj', 'Common-proj'}
 	.SolutionFolders = {.ExternalProjectsFolder}
-	.SolutionBuildProject = 'Graphics-SDL2-proj'
+	.SolutionBuildProject = 'PotionBrewing-proj'
 	.SolutionVisualStudioVersion = '17.0.26228'
 	.SolutionConfigs = .PlatformConfigPairs
 }

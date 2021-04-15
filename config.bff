@@ -72,12 +72,17 @@ Compiler('Compiler-GCC')
 		+ ' /TP' ; all files are c++
 		+ ' /std:c++$CppStandard$' ; c++ standard
 		;+ ' /WX' ; warnings as errors
+		+ ' /D_WIN32_WINNT=0x0A00' ; target win10 or more recent
+		+ ' /D_WIN32_WINDOWS=0x0A00' ; target win10 or more recent
+		+ ' /DWINDOWS /D_WINDOWS /DUNICODE /D_UNICODE'
 	
 	.LinkerOptions = ' /OUT:"%2"' ; output
 		+ ' "%1"' ; input
+		+ ' /SUBSYSTEM:WINDOWS' ; windows desktop app
 		;+ ' /WX' ; warnings as errors
 		+ ' /NOLOGO' ; no linker spam
 		+ ' /DEBUG' ; keep debug info when linking
+		+ ' /NODEFAULTLIB' ; no default libs
 		
 	.LibrarianOptions = '/NOLOGO /OUT:"%2" "%1"' ; add /WX later
 ]
@@ -92,6 +97,7 @@ Compiler('Compiler-GCC')
 		+ ' /LIBPATH:"$WindowsLibPath$\$Platform$"'
 		+ ' /LIBPATH:"$WindowsUcrtLibPath$\$Platform$"'
 	.LinkerOptions + .LibPaths
+		+ ' /MACHINE:X64'
 
 	.Compiler = 'Compiler-MSVC-$Platform$'
 	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'	
@@ -108,6 +114,7 @@ Compiler('Compiler-GCC')
 		+ ' /LIBPATH:"$WindowsLibPath$\$Platform$"'
 		+ ' /LIBPATH:"$WindowsUcrtLibPath$\$Platform$"'
 	.LinkerOptions + .LibPaths
+		+ ' /MACHINE:X86'
 
 	.Compiler = 'Compiler-MSVC-$Platform$'
 	.Linker = '$VS2017ToolBinPath$$Platform$\$Platform$\link.exe'	
@@ -156,10 +163,12 @@ ForEach(.Plt in .Platforms)
 	[
 		.Platform = .DefaultPlatform
 		.Config = 'MSVC-Debug-$Plt$'
+		.Target = '' ; specific for VS
 		.BuilderConfig = ."MSVCBuilderConfig_$Plt$"
 		.AdditionalCompilerFlags = ' /MTd /Od /RTC1 /GS /Oy- /EHscr /DDEBUG'
 		.AdditionalLinkerFlags = ''
 		.AdditionalLibrarianFlags = ''
+		.WinLibPostfix = 'd'; like libcmtD.lib
 	]
 	^PlatformConfigPairs + .PlatformConfigPairDebug
 	
@@ -167,10 +176,12 @@ ForEach(.Plt in .Platforms)
 	[
 		.Platform = .DefaultPlatform
 		.Config = 'MSVC-Release-$Plt$'
+		.Target = '' ; specific for VS
 		.BuilderConfig = ."MSVCBuilderConfig_$Plt$"
 		.AdditionalCompilerFlags = ' /MT /Ox /Oy /Oi /GS- /GF /GL /Gy /Gw /EHsc /DRELEASE'
 		.AdditionalLinkerFlags = ' /LTCG /OPT:REF,ICF'
 		.AdditionalLibrarianFlags = ' /LTCG'
+		.WinLibPostfix = ''; like libcmt.lib
 	]
 	^PlatformConfigPairs + .PlatformConfigPairRelease
 #else ; generate configs for GCC

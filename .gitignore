@@ -31,13 +31,18 @@
 *.log
 
 # Executables
-# *.exe # disabling for fbuild
+#*.exe # for fbuild
 *.out
 *.app
+
+# Other artifacts
+*.ilk
+*.pdb
 
 # Build folders
 /lib/
 /obj/
+/exe/
 
 # VS Solutions, projects
 *.sln
@@ -45,6 +50,7 @@
 *.vcxproj.*
 
 # VS data
+.editorconfig
 .vs/
 #./x64
 /asio/x64/

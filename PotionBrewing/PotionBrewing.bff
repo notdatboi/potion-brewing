@@ -7,12 +7,11 @@
 	.ProjectName = 'PotionBrewing'
 	.ProjectPath = 'PotionBrewing'
 	.ObjPath = 'obj'
-	.OutputPath = 'exe'
-	.BuiltLibPath = 'lib'
+	.OutputLibPath = 'lib'
+	.OutputExePath = 'exe'
 
-	.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include'}
-	.AdditionalIncludes + 'Graphics' ; common headers for Graphics libs
-	.AdditionalIncludes + 'asio/include' ; ASIO headers
+	.AdditionalIncludes = {'./', './$ProjectPath$', './$ProjectPath$/include', 'Graphics', 'asio/include', 'Common/include'}
+
 	#if __WINDOWS__
 	.AdditionalIncludes + .WindowsIncludePath
 		+ .WindowsUcrtIncludePath
@@ -20,16 +19,6 @@
 	#else
 	#endif
 	.AdditionalDefines = {'ASIO_SEPARATE_COMPILATION'}
-
-	#if __WINDOWS__
-	VCXProject('$ProjectName$-proj')
-	{
-		.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
-		.ProjectBasePath = '$ProjectPath$'
-		.ProjectInputPaths = {'$ProjectPath$'}
-		.ProjectConfigs = .PlatformConfigPairs
-	}
-	#endif
 
 	.AdditionalIncludeString = ''
 	ForEach(.Folder in .AdditionalIncludes)
@@ -53,32 +42,97 @@
 	#endif
 	}
 
-	.BuiltLibs = {'ASIO', 'Graphics-SDL2'}
+	; library dependencies
+	.BuiltLibs = 
+	{
+		'ASIO', 
+		'Graphics-SDL2'
+		'Common'
+	}
 	.SDL2LibFullPath = 
 	#if __WINDOWS__
 		'Graphics-SDL2/SDL2/$SDL2LibPath$'
 	#else
 		'' ; todo: adjust for Linux
 	#endif
+
+	; creating targets
 	ForEach(.Config in .PlatformConfigPairs)
 	{
 		Using(.Config)
 		Using(.BuilderConfig)
+
+		Library('$ProjectName$-$Config$-Lib')
+		{
+			;.Compiler ; inherited
+			.CompilerOptions + .AdditionalIncludeString ; inherited
+				+ .AdditionalDefineString
+				+ .AdditionalCompilerFlags
+			.CompilerOutputPath = '$ObjPath$/$Config$/$ProjectName$'
+			.CompilerInputPath = .ProjectPath
+			;.Librarian ; inherited
+			.LibrarianOptions + .AdditionalLibrarianFlags ; inherited
+			.LibrarianOutput = '$OutputLibPath$/$Config$/$ProjectName$.$StaticLibExtension$'
+		}
+		.BuiltLibs + .ProjectName
 		
 		.BuiltLibsFull = {}
 		ForEach(.Lib in .BuiltLibs)
 		{
-			^BuiltLibsFull + '$BuiltLibPath$/$Config$/$ProjectName$.$StaticLibExtension$'
+			^BuiltLibsFull + '$OutputLibPath$/$Config$/$Lib$.$StaticLibExtension$'
 		}
 		.BuiltLibsFull + '$SDL2LibFullPath$/$Platform$/SDL2.$StaticLibExtension$'
+
 		
-		Executable('$ProjectName$-$Config$')
+		.OtherLibDependencyString = ''
+		#if __WINDOWS__
+			+ ' libucrt$WinLibPostfix$.lib'
+			+ ' libvcruntime$WinLibPostfix$.lib'
+			+ ' libcmt$WinLibPostfix$.lib'
+			+ ' libcpmt$WinLibPostfix$.lib'
+			+ ' libconcrt$WinLibPostfix$.lib'
+			+ ' kernel32.lib'
+			+ ' user32.lib'
+		#else
+			+ ' -lpthread'
+		#endif
+		
+		Executable('$ProjectName$-$Config$-Exe')
 		{
 			;.Linker ; inherited
-			.LinkerOutput = '$OutputPath$/$Config$/$ProjectName$.$ExecutableExtension$'
+			.LinkerOutput = '$OutputExePath$/$Config$/$ProjectName$.$ExecutableExtension$'
 			.LinkerOptions + .AdditionalLinkerFlags ; inherited
+				+ .OtherLibDependencyString
 			.Libraries = .BuiltLibsFull
 			;.PreBuildDependencies ; todo: add if needed
 		}
+		
+		Alias('$ProjectName$-$Config$')
+		{
+			.Targets = {'$ProjectName$-$Config$-Lib', '$ProjectName$-$Config$-Exe'}
+		}
 	}
+
+	#if __WINDOWS__
+	.PathFromProjToRoot = '..'
+	.PlatformConfigPairsWithTargets = {}
+	ForEach(.PlatformConfigPair in .PlatformConfigPairs)
+	{
+		.PairWithTarget =
+		[
+			Using(.PlatformConfigPair)
+			.Target = '$ProjectName$-$Config$-Lib'
+			.OutputDirectory = '$PathFromProjToRoot$/$OutputExePath$/$Config$/'
+		]
+		^PlatformConfigPairsWithTargets + .PairWithTarget
+	}
+
+	VCXProject('$ProjectName$-proj')
+	{
+		.ProjectOutput = '$ProjectPath$\$ProjectName$.vcxproj'
+		.ProjectBasePath = '$ProjectPath$'
+		.ProjectInputPaths = {'$ProjectPath$'}
+		.ProjectConfigs = .PlatformConfigPairsWithTargets
+	}
+	#endif
 }
