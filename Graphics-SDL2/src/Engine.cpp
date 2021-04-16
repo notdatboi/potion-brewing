@@ -1,6 +1,6 @@
-#include <SDL2Engine.hpp>
+#include <Engine.hpp>
 #include <LogDefines.hpp>
-#include <SDL2Window.hpp>
+#include <Window.hpp>
 
 // telling SDL that we won't use it's SDL_main()
 #define SDL_MAIN_HANDLED
@@ -11,10 +11,15 @@ namespace ui
 
 std::unique_ptr<Engine> EngineFactory::produceEngine()
 {
-	return std::make_unique<SDL2Engine>();
+	return std::make_unique<sdl2::Engine>();
 }
 
-bool SDL2Engine::initialize()
+}
+
+namespace ui::sdl2
+{
+
+bool Engine::initialize()
 {
 	SDL_SetMainReady();
 	const auto result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
@@ -26,14 +31,14 @@ bool SDL2Engine::initialize()
 	return true;
 }
 
-void SDL2Engine::deinitialize()
+void Engine::deinitialize()
 {
 	SDL_Quit();
 }
 
-std::shared_ptr<Window> SDL2Engine::createWindow()
+std::shared_ptr<ui::Window> Engine::createWindow()
 {
-	std::shared_ptr<Window> window = std::make_shared<SDL2Window>();
+	std::shared_ptr<ui::Window> window = std::make_shared<Window>();
 	m_childHandlers.push_back(window);
 	return window;
 }
