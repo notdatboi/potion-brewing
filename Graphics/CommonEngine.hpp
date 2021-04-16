@@ -1,8 +1,7 @@
 #pragma once
 #include <memory>
-#include <map>
-#include <EventHandler.hpp>
-#include <Window.hpp>
+#include <CommonEventHandler.hpp>
+#include <CommonWindow.hpp>
 
 namespace ui
 {

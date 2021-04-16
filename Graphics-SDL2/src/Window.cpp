@@ -1,9 +1,9 @@
-#include <SDL2Window.hpp>
+#include <Window.hpp>
 
-namespace ui
+namespace ui::sdl2
 {
 
-Uint32 SDL2Window::windowFlagsToSDLFlags(Flag flags)
+Uint32 Window::windowFlagsToSDLFlags(Flag flags)
 {
 	Uint32 result = 0;
 	if (utils::enum_cast(flags & Flag::Fullscreen))
@@ -21,18 +21,18 @@ Uint32 SDL2Window::windowFlagsToSDLFlags(Flag flags)
 	return result;
 }
 
-SDL2Window::SDL2Window()
+Window::Window()
 	: m_window(nullptr)
 {
 }
 
-SDL2Window::~SDL2Window()
+Window::~Window()
 {
 	if (m_window)
 		SDL_DestroyWindow(m_window);
 }
 
-void SDL2Window::init(compat::cstring_view title, Rect windowRect, Flag flags)
+void Window::init(compat::cstring_view title, Rect windowRect, Flag flags)
 {
 	m_window = SDL_CreateWindow(title.c_str(), windowRect.x, windowRect.y, static_cast<int>(windowRect.w), static_cast<int>(windowRect.h), windowFlagsToSDLFlags(flags));
 }

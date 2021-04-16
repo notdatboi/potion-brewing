@@ -1,16 +1,16 @@
 #pragma once
-#include <Window.hpp>
+#include <CommonWindow.hpp>
 #include <SDL_render.h>
 
-namespace ui
+namespace ui::sdl2
 {
 
-class SDL2Window : public Window
+class Window : public ui::Window
 {
 	SDL_Window* m_window;
 public:
-	SDL2Window();
-	~SDL2Window() override;
+	Window();
+	~Window() override;
 	static Uint32 windowFlagsToSDLFlags(Flag flags);
 	void init(compat::cstring_view title, Rect windowRect, Flag flags) override;
 };
