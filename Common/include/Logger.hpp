@@ -19,6 +19,8 @@ class Logger
 	Logger();
 
 public:
+	~Logger();
+
 	static Logger& getInstance();
 
 	class Appender

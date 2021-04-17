@@ -5,14 +5,21 @@
 namespace ui::sdl2
 {
 
-class Window : public ui::Window
+class Window : public ui::Window, public std::enable_shared_from_this<Window>
 {
 	SDL_Window* m_window;
+	SDL_Renderer* m_renderer;
 public:
 	Window();
 	~Window() override;
 	static Uint32 windowFlagsToSDLFlags(Flag flags);
-	void init(compat::cstring_view title, Rect windowRect, Flag flags) override;
+	bool init(compat::cstring_view title, const Rect& windowRect, Flag flags) override;
+	std::shared_ptr<ui::Button> createRectButton() override;
+	void clear() override;
+	void draw() override;
+	void present() override;
+	SDL_Window* getWindow() const;
+	SDL_Renderer* getRenderer() const;
 };
 
 }

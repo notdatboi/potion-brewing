@@ -27,6 +27,14 @@ Logger::Logger()
 {
 }
 
+Logger::~Logger()
+{
+	try
+	{
+		flush();
+	} catch (...) {}
+}
+
 Logger& Logger::getInstance()
 {
 	if (!m_instance)
