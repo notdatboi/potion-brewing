@@ -1,5 +1,6 @@
 #pragma once
 #include <CommonWindow.hpp>
+#include <Drawable.hpp>
 #include <SDL_render.h>
 
 namespace ui::sdl2
@@ -9,6 +10,7 @@ class Window : public ui::Window, public std::enable_shared_from_this<Window>
 {
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;
+	std::vector<std::shared_ptr<Drawable>> m_drawables;
 public:
 	Window();
 	~Window() override;
