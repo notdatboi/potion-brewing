@@ -36,10 +36,27 @@ void Engine::deinitialize()
 	SDL_Quit();
 }
 
+void Engine::pumpEvents()
+{
+	SDL_PumpEvents();
+}
+
 void Engine::pollAndProcessEvent()
 {
-	SDL_Event evt;
-	SDL_PollEvent(&evt);
+	pumpEvents();
+	SDL_Event event;
+	SDL_PollEvent(&event);
+	// stub, todo:
+}
+
+void Engine::pollAndProcessEvents()
+{
+	pumpEvents();
+	SDL_Event event;
+	while (SDL_PollEvent(&event) == 1)
+	{
+		// stub, todo:
+	}
 }
 
 std::shared_ptr<ui::Window> Engine::createWindow()

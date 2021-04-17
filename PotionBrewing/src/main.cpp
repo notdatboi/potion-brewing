@@ -1,6 +1,4 @@
-#include <thread>
-#include <CommonEngine.hpp>
-#include <LogDefines.hpp>
+#include <Application.hpp>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -10,10 +8,8 @@ int APIENTRY WinMain(HINSTANCE /*instance*/, HINSTANCE /*prevInstance*/, PSTR /*
 int main()
 #endif
 {
-	auto uiEngine = ui::EngineFactory::produceEngine();
-	if (uiEngine->initialize())
-	{
-		uiEngine->deinitialize();
-	}
+	pb::Application app;
+	if (app.init())
+		app.run();
 	return 0;
 }

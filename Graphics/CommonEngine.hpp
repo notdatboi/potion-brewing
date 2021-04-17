@@ -20,6 +20,7 @@ public:
 	virtual bool initialize() = 0;
 	virtual void deinitialize() = 0;
 	virtual void pollAndProcessEvent() = 0;
+	virtual void pollAndProcessEvents() = 0;
 	virtual std::shared_ptr<Window> createWindow() = 0;
 	virtual ~Engine() = default;
 };
