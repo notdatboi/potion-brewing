@@ -36,6 +36,12 @@ void Engine::deinitialize()
 	SDL_Quit();
 }
 
+void Engine::pollAndProcessEvent()
+{
+	SDL_Event evt;
+	SDL_PollEvent(&evt);
+}
+
 std::shared_ptr<ui::Window> Engine::createWindow()
 {
 	std::shared_ptr<ui::Window> window = std::make_shared<Window>();

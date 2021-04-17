@@ -57,6 +57,7 @@
 /Graphics-SDL2/x64/
 /PotionBrewing/x64/
 /Common/x64/
+/PotionBrewing/log.txt
 
 # CLion data
 .idea
