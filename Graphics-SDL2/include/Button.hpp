@@ -1,10 +1,11 @@
 #pragma once
 #include <CommonButton.hpp>
+#include <Drawable.hpp>
 
 namespace ui::sdl2
 {
 
-class Button : public ui::Button
+class Button : public ui::Button, public Drawable
 {
 public:
 	Button();

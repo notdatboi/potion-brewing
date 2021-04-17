@@ -15,7 +15,6 @@ public:
 	virtual void setFillColor(const RGBA& color) = 0;
 	virtual void setPosition(Point newPosition) = 0;
 	virtual void setDimensions(Dimensions newDimensions) = 0;
-	virtual void draw() = 0;
 	//virtual void setTexture() = 0;
 	//virtual void setBorder() = 0;
 	//virtual void setShadow() = 0;

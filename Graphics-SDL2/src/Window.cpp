@@ -52,7 +52,9 @@ bool Window::init(compat::cstring_view title, const Rect& windowRect, Flag flags
 
 std::shared_ptr<ui::Button> Window::createRectButton()
 {
-	return std::make_shared<RectButton>(weak_from_this());
+	auto button = std::make_shared<RectButton>(weak_from_this());
+	m_drawables.push_back(button);
+	return std::move(button);
 }
 
 void Window::clear()
@@ -63,7 +65,11 @@ void Window::clear()
 
 void Window::draw()
 {
-	// do nothing yet (todo:)
+	for (const auto& drawable : m_drawables)
+	{
+		assert(drawable && "Drawables must not be empty");
+		drawable->draw();
+	}
 }
 
 void Window::present()
