@@ -41,21 +41,28 @@ void Engine::pumpEvents()
 	SDL_PumpEvents();
 }
 
+bool Engine::processEvent()
+{
+	SDL_Event event;
+	if (SDL_PollEvent(&event) == 1)
+	{
+		// stub, todo:
+		return true;
+	}
+	return false;
+}
+
 void Engine::pollAndProcessEvent()
 {
 	pumpEvents();
-	SDL_Event event;
-	SDL_PollEvent(&event);
-	// stub, todo:
+	processEvent();
 }
 
 void Engine::pollAndProcessEvents()
 {
 	pumpEvents();
-	SDL_Event event;
-	while (SDL_PollEvent(&event) == 1)
+	while (processEvent())
 	{
-		// stub, todo:
 	}
 }
 

@@ -7,6 +7,7 @@ namespace ui::sdl2
 class Engine : public ui::Engine
 {
 	void pumpEvents();
+	bool processEvent(); // returns whether there is an event to process
 public:
 	bool initialize() override;
 	void deinitialize() override;

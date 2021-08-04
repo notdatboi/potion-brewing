@@ -7,7 +7,7 @@
 namespace ui
 {
 
-class EventHandler
+class EventHandler // todo: add Connection class
 {
 public:
 	template<class T>

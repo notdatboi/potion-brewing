@@ -84,8 +84,8 @@ struct WindowEventData : WindowBoundEventData
 		Invalid
 	};
 
-	uint32_t x = 0; // new width or new x-coordinate
-	uint32_t y = 0; // new height or new y-coordinate
+	int32_t x = 0; // new width or new x-coordinate
+	int32_t y = 0; // new height or new y-coordinate
 };
 
 struct KeyboardEventData : WindowBoundEventData
@@ -101,6 +101,7 @@ struct KeyboardEventData : WindowBoundEventData
 		RCtrl = 1 << 3,
 		LAlt = 1 << 4,
 		RAlt = 1 << 5,
+		Caps = 1 << 6,
 		AnyShift = LShift | RShift,
 		AnyCtrl = LCtrl | RCtrl,
 		AnyAlt = LAlt | RAlt
@@ -124,7 +125,7 @@ struct KeyboardEventData : WindowBoundEventData
 	Key scanCode = Key::Invalid;
 	Key keyCode = Key::Invalid;
 
-	uint32_t keyModifierMask = static_cast<uint32_t>(KeyModifier::None);
+	KeyModifier keyModifierMask = KeyModifier::None;
 	uint32_t repeatCount = 0;
 };
 DEF_ENUM_OPERATORS(KeyboardEventData::KeyModifier)
