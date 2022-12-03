@@ -1,7 +1,7 @@
 #include <thread>
-#include <CommonEngine.hpp>
+/*#include <CommonEngine.hpp>
 #include <LogDefines.hpp>
-
+*/
 #ifdef _WIN32
 #include <windows.h>
 
@@ -10,10 +10,10 @@ int APIENTRY WinMain(HINSTANCE /*instance*/, HINSTANCE /*prevInstance*/, PSTR /*
 int main()
 #endif
 {
-	auto uiEngine = ui::EngineFactory::produceEngine();
+	/*auto uiEngine = ui::EngineFactory::produceEngine();
 	if (uiEngine->initialize())
 	{
 		uiEngine->deinitialize();
 	}
-	return 0;
+	return 0;*/
 }
