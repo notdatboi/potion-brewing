@@ -43,6 +43,7 @@
 /lib/
 /obj/
 /exe/
+/build/
 
 # VS Solutions, projects
 *.sln
