@@ -17,12 +17,14 @@ cmake_print_variables(CMAKE_CURRENT_SOURCE_DIR)
 
 set(BOOST_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/boost")
 add_subdirectory(boost)
-#add_subdirectory(asio)
 add_subdirectory(SDL)
 
 add_executable(PotionBrewing main.cpp)
+
+cmake_print_variables(Boost_LIBRARIES)
+target_include_directories(PotionBrewing PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/SDL/include")
+
 target_link_libraries(PotionBrewing PUBLIC
-  ${Boost_LIBRARIES}
-  #boost_asio
+  Boost::asio
   SDL3
   pthread)

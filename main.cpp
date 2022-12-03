@@ -1,4 +1,7 @@
 #include <thread>
+#include <iostream>
+#include <boost/asio.hpp>
+#include <SDL3/SDL_stdinc.h>
 /*#include <CommonEngine.hpp>
 #include <LogDefines.hpp>
 */
@@ -10,6 +13,10 @@ int APIENTRY WinMain(HINSTANCE /*instance*/, HINSTANCE /*prevInstance*/, PSTR /*
 int main()
 #endif
 {
+	boost::asio::io_context io;
+	boost::asio::steady_timer t(io, boost::asio::chrono::seconds(5));
+	t.wait();
+	std::cout << "Hello, world!" << std::endl;
 	/*auto uiEngine = ui::EngineFactory::produceEngine();
 	if (uiEngine->initialize())
 	{
