@@ -6,16 +6,6 @@
 #define SDL_MAIN_HANDLED
 #include <SDL3/SDL.h>
 
-namespace ui
-{
-
-std::unique_ptr<Engine> EngineFactory::produceEngine()
-{
-	return std::make_unique<sdl2::Engine>();
-}
-
-}
-
 namespace ui::sdl2
 {
 
@@ -42,10 +32,10 @@ void Engine::pollAndProcessEvent()
 	SDL_PollEvent(&evt);
 }
 
-std::shared_ptr<ui::Window> Engine::createWindow()
+std::shared_ptr<ui::sdl2::Window> Engine::createWindow()
 {
-	std::shared_ptr<ui::Window> window = std::make_shared<Window>();
-	m_childHandlers.push_back(window);
+	std::shared_ptr<ui::sdl2::Window> window = std::make_shared<Window>();
+	//m_childHandlers.push_back(window);
 	return window;
 }
 

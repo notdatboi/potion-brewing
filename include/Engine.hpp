@@ -1,16 +1,18 @@
 #pragma once
-#include <CommonEngine.hpp>
+#include <Window.hpp>
 
 namespace ui::sdl2
 {
 
-class Engine : public ui::Engine
+class Engine
 {
 public:
-	bool initialize() override;
-	void deinitialize() override;
-	void pollAndProcessEvent() override;
-	std::shared_ptr<ui::Window> createWindow() override;
+	Engine() = default;
+	bool initialize();
+	void deinitialize();
+	void pollAndProcessEvent();
+	std::shared_ptr<ui::sdl2::Window> createWindow();
+	virtual ~Engine() = default;
 };
 
 }

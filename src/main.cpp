@@ -2,7 +2,7 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <SDL3/SDL_stdinc.h>
-#include <CommonEngine.hpp>
+#include <Engine.hpp>
 #include <LogDefines.hpp>
 
 #ifdef _WIN32
@@ -14,12 +14,17 @@ int main()
 #endif
 {
 	boost::asio::io_context io;
-	boost::asio::steady_timer t(io, boost::asio::chrono::seconds(5));
-	t.wait();
+	//boost::asio::steady_timer t(io, boost::asio::chrono::seconds(5));
+	//t.wait();
 	std::cout << "Hello, world!" << std::endl;
-	auto uiEngine = ui::EngineFactory::produceEngine();
+	auto uiEngine = std::make_shared<ui::sdl2::Engine>();
 	if (uiEngine->initialize())
 	{
+		auto window = uiEngine->createWindow();
+		window->init("TEST", {100, 100, 800, 600}, 0);
+		window->present();
+	boost::asio::steady_timer t(io, boost::asio::chrono::seconds(5));
+	t.wait();
 		uiEngine->deinitialize();
 	}
 	return 0;
