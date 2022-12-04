@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-namespace ui::sdl2
+namespace ui
 {
 
 class Window;

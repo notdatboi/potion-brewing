@@ -2,11 +2,12 @@
 #include <SDL3/SDL_render.h>
 #include <memory>
 #include <cstring_view.hpp>
+#include <Events.hpp>
 
-namespace ui::sdl2
+namespace ui
 {
 
-class Window : public std::enable_shared_from_this<Window>
+class Window : public EventHandler, public std::enable_shared_from_this<Window>
 {
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;

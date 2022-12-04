@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ui::sdl2
+namespace ui
 {
 
 void LogIfError(int executionResult);

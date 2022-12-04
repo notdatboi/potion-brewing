@@ -2,7 +2,7 @@
 #include <GraphicsUtils.hpp>
 #include <RectButton.hpp>
 
-namespace ui::sdl2
+namespace ui
 {
 
 RectButton::RectButton(std::weak_ptr<Window> parentWindow)

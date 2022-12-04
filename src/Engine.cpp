@@ -6,7 +6,7 @@
 #define SDL_MAIN_HANDLED
 #include <SDL3/SDL.h>
 
-namespace ui::sdl2
+namespace ui
 {
 
 bool Engine::initialize()
@@ -18,24 +18,36 @@ bool Engine::initialize()
 		LOG << "Failed to initialize SDL3, error code: " << result << "; error text: " << SDL_GetError();
 		return false;
 	}
-	return true;
+	m_rootEventHander = std::make_unique<EventHandler>();
+	m_valid = true;
+	return m_valid;
 }
 
 void Engine::deinitialize()
 {
-	SDL_Quit();
+	if (m_valid)
+	{
+		m_valid = false;
+		SDL_Quit();
+	}
+}
+
+bool Engine::isValid() const
+{
+	return m_valid;
 }
 
 void Engine::pollAndProcessEvent()
 {
 	SDL_Event evt;
 	SDL_PollEvent(&evt);
+	m_rootEventHander->notify(evt);
 }
 
-std::shared_ptr<ui::sdl2::Window> Engine::createWindow()
+std::shared_ptr<ui::Window> Engine::createWindow()
 {
-	std::shared_ptr<ui::sdl2::Window> window = std::make_shared<Window>();
-	//m_childHandlers.push_back(window);
+	std::shared_ptr<ui::Window> window = std::make_shared<Window>();
+	m_rootEventHander->addChildHandler(window);
 	return window;
 }
 

@@ -2,7 +2,7 @@
 #include <LogDefines.hpp>
 #include <SDL3/SDL_error.h>
 
-namespace ui::sdl2
+namespace ui
 {
 
 void LogIfError(int executionResult)
