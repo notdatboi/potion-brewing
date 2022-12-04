@@ -4,7 +4,7 @@
 
 // telling SDL that we won't use it's SDL_main()
 #define SDL_MAIN_HANDLED
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 namespace ui
 {
@@ -25,7 +25,7 @@ bool Engine::initialize()
 	const auto result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS);
 	if (result != 0)
 	{
-		LOG << "Failed to initialize SDL2, error code: " << result << "; error text: " << SDL_GetError();
+		LOG << "Failed to initialize SDL3, error code: " << result << "; error text: " << SDL_GetError();
 		return false;
 	}
 	return true;

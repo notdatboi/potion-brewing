@@ -2,9 +2,9 @@
 #include <iostream>
 #include <boost/asio.hpp>
 #include <SDL3/SDL_stdinc.h>
-/*#include <CommonEngine.hpp>
+#include <CommonEngine.hpp>
 #include <LogDefines.hpp>
-*/
+
 #ifdef _WIN32
 #include <windows.h>
 
@@ -17,10 +17,10 @@ int main()
 	boost::asio::steady_timer t(io, boost::asio::chrono::seconds(5));
 	t.wait();
 	std::cout << "Hello, world!" << std::endl;
-	/*auto uiEngine = ui::EngineFactory::produceEngine();
+	auto uiEngine = ui::EngineFactory::produceEngine();
 	if (uiEngine->initialize())
 	{
 		uiEngine->deinitialize();
 	}
-	return 0;*/
+	return 0;
 }

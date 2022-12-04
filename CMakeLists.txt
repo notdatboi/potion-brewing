@@ -20,7 +20,7 @@ add_subdirectory(boost)
 add_subdirectory(SDL)
 
 file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
-file(GLOB HDRS ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+file(GLOB HDRS ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp ${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp)
 
 add_executable(PotionBrewing ${SRCS} ${HDRS})
 

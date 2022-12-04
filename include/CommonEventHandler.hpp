@@ -2,6 +2,7 @@
 #include <map>
 #include <memory>
 #include <cassert>
+#include <list>
 #include <CommonEvents.hpp>
 
 namespace ui

@@ -1,7 +1,7 @@
 #pragma once
 #include <CommonWindow.hpp>
 #include <Drawable.hpp>
-#include <SDL_render.h>
+#include <SDL3/SDL_render.h>
 
 namespace ui::sdl2
 {

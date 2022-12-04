@@ -1,7 +1,7 @@
 #pragma once
 #include <ClickableArea.hpp>
 #include <CommonStructures.hpp>
-#include <SDL_rect.h>
+#include <SDL3/SDL_rect.h>
 
 namespace ui::sdl2
 {
