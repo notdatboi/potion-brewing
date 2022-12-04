@@ -5,24 +5,6 @@
 namespace ui::sdl2
 {
 
-Uint32 Window::windowFlagsToSDLFlags(Flag flags)
-{
-	Uint32 result = 0;
-	if (utils::enum_cast(flags & Flag::Fullscreen))
-		result &= SDL_WINDOW_FULLSCREEN;
-	if (utils::enum_cast(flags & Flag::Hidden))
-		result &= SDL_WINDOW_HIDDEN;
-	if (utils::enum_cast(flags & Flag::Borderless))
-		result &= SDL_WINDOW_BORDERLESS;
-	if (utils::enum_cast(flags & Flag::Resizable))
-		result &= SDL_WINDOW_RESIZABLE;
-	if (utils::enum_cast(flags & Flag::Minimized))
-		result &= SDL_WINDOW_MINIMIZED;
-	if (utils::enum_cast(flags & Flag::Maximized))
-		result &= SDL_WINDOW_MAXIMIZED;
-	return result;
-}
-
 Window::Window()
 	: m_window(nullptr)
 	, m_renderer(nullptr)
@@ -37,9 +19,9 @@ Window::~Window()
 		SDL_DestroyRenderer(m_renderer);
 }
 
-bool Window::init(compat::cstring_view title, const Rect& windowRect, Flag flags)
+bool Window::init(compat::cstring_view title, const SDL_Rect& windowRect, Uint32 flags)
 {
-	m_window = SDL_CreateWindow(title.c_str(), windowRect.x, windowRect.y, static_cast<int>(windowRect.w), static_cast<int>(windowRect.h), windowFlagsToSDLFlags(flags));
+	m_window = SDL_CreateWindow(title.c_str(), windowRect.x, windowRect.y, windowRect.w, windowRect.h, flags);
 	if (!m_window)
 		return false;
 	m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -50,12 +32,12 @@ bool Window::init(compat::cstring_view title, const Rect& windowRect, Flag flags
 	return m_renderer;
 }
 
-std::shared_ptr<ui::Button> Window::createRectButton()
+/*std::shared_ptr<ui::Button> Window::createRectButton()
 {
 	auto button = std::make_shared<RectButton>(weak_from_this());
 	m_drawables.push_back(button);
 	return std::move(button);
-}
+}*/
 
 void Window::clear()
 {
@@ -65,11 +47,11 @@ void Window::clear()
 
 void Window::draw()
 {
-	for (const auto& drawable : m_drawables)
+	/*for (const auto& drawable : m_drawables)
 	{
 		assert(drawable && "Drawables must not be empty");
 		drawable->draw();
-	}
+	}*/
 }
 
 void Window::present()

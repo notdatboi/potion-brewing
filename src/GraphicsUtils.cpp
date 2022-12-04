@@ -1,6 +1,6 @@
 #include <GraphicsUtils.hpp>
 #include <LogDefines.hpp>
-#include <SDL_error.h>
+#include <SDL3/SDL_error.h>
 
 namespace ui::sdl2
 {
