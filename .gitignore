@@ -59,6 +59,7 @@
 /PotionBrewing/x64/
 /Common/x64/
 /PotionBrewing/log.txt
+/.vscode/
 
 # CLion data
 .idea

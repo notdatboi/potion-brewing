@@ -19,10 +19,13 @@ set(BOOST_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/boost")
 add_subdirectory(boost)
 add_subdirectory(SDL)
 
-add_executable(PotionBrewing main.cpp)
+file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB HDRS ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+
+add_executable(PotionBrewing ${SRCS} ${HDRS})
 
 cmake_print_variables(Boost_LIBRARIES)
-target_include_directories(PotionBrewing PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/SDL/include")
+target_include_directories(PotionBrewing PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/SDL/include" "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 target_link_libraries(PotionBrewing PUBLIC
   Boost::asio
