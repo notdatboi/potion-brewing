@@ -19,7 +19,7 @@ Window::~Window()
 		SDL_DestroyRenderer(m_renderer);
 }
 
-bool Window::init(compat::cstring_view title, const SDL_Rect& windowRect, Uint32 flags)
+bool Window::init(const std::string& title, const SDL_Rect& windowRect, Uint32 flags)
 {
 	m_window = SDL_CreateWindow(title.c_str(), windowRect.x, windowRect.y, windowRect.w, windowRect.h, flags);
 	if (!m_window)

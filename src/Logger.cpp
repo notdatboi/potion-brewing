@@ -5,8 +5,7 @@ namespace common
 
 std::mutex Logger::m_instanceMutex;
 std::unique_ptr<Logger> Logger::m_instance;
-const compat::cstring_view Logger::m_logFileName = "log.txt";
-
+const std::string Logger::m_logFileName = "log.txt";
 
 Logger::Appender::Appender(Logger& logger)
 	: m_logger(logger)

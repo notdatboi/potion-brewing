@@ -2,7 +2,6 @@
 #include <memory>
 #include <mutex>
 #include <fstream>
-#include <cstring_view.hpp>
 
 namespace common
 {
@@ -11,7 +10,7 @@ class Logger
 {
 	static std::mutex m_instanceMutex;
 	static std::unique_ptr<Logger> m_instance;
-	static const compat::cstring_view m_logFileName;
+	static const std::string m_logFileName;
 
 	std::mutex m_streamMutex;
 	std::fstream m_logFile;

@@ -1,6 +1,8 @@
 #pragma once
 #include <functional>
 #include <map>
+#include <vector>
+#include <memory>
 #include <Utils.hpp>
 #include <SDL3/SDL.h>
 
